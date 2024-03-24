@@ -1,16 +1,36 @@
-# This is a sample Python script.
+import sys
+import numpy as np
+import pandas as pd
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+df = pd.read_csv('matrix.csv', header=None)
+A = df.iloc[:, :-1].values
+b = df.iloc[:, -1].values
 
+isOk = np.all(A < 1)
+if not isOk:
+    print("Macierz nie jest zbierzna")
+    sys.exit(1)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+D = np.diag(np.diag(A))
+LU = np.copy(A)
+np.fill_diagonal(LU, 0)
+P = -np.dot(np.linalg.inv(D), LU)
+q = np.dot(np.linalg.inv(D), b)
+wynik = np.copy(q)
+wybor = input("Podaj warunek stopu iteracje/epsilon (i/e): ")
+match wybor:
+    case "i":
+        iterations = int(input("Podaj ilosc iteracji: "))
+        for i in range(iterations):
+            wynik = np.dot(P, wynik) + q
+        pass
+    case "e":
+        epsilon = float(input("Podaj eplison: "))
+        roznica = epsilon * 2
+        while roznica > epsilon:
+            wynik2 = wynik
+            wynik = np.dot(P, wynik) + q
+            roznica = np.sum(np.abs(wynik - wynik2))
+        pass
+print(wynik)
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
