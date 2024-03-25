@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('matrix.csv', header=None)
+df = pd.read_csv('matrix_nieoznaczona.csv', header=None)
 A = df.iloc[:, :-1].values
 b = df.iloc[:, -1].values
 
@@ -16,6 +16,10 @@ LU = np.copy(A)
 np.fill_diagonal(LU, 0)
 P = -np.dot(np.linalg.inv(D), LU)
 q = np.dot(np.linalg.inv(D), b)
+print(f"P: {P}")
+print(f"q: {q}")
+
+
 wynik = np.copy(q)
 wybor = input("Podaj warunek stopu iteracje/epsilon (i/e): ")
 match wybor:
